@@ -74,35 +74,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   if (!is_keyboard_master()) {
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+    return OLED_ROTATION_180;
   }
-  return rotation;
+  return OLED_ROTATION_270;
 }
 
-#define L_BASE 0
-#define L_LOWER 2
-#define L_RAISE 4
-#define L_ADJUST 8
+static const char *layer_names[] = {
+    "Base", "Symbl", "Ctrl", "Func", "Four", "Five", "Game"
+};
 
 void oled_render_layer_state(void) {
-    oled_write_P(PSTR("Layer: "), false);
-    switch (layer_state) {
-        case L_BASE:
-            oled_write_ln_P(PSTR("Default"), false);
-            break;
-        case L_LOWER:
-            oled_write_ln_P(PSTR("Lower"), false);
-            break;
-        case L_RAISE:
-            oled_write_ln_P(PSTR("Raise"), false);
-            break;
-        case L_ADJUST:
-        case L_ADJUST|L_LOWER:
-        case L_ADJUST|L_RAISE:
-        case L_ADJUST|L_LOWER|L_RAISE:
-            oled_write_ln_P(PSTR("Adjust"), false);
-            break;
-    }
+    oled_write_ln_P(PSTR(""), false);
+    oled_write_ln_P(PSTR(""), false);
+    uint8_t layer = get_highest_layer(layer_state);
+    oled_write_ln_P(PSTR("LAYER"), false);
+    oled_write_ln(layer < 7 ? layer_names[layer] : "?", false);
+}
+
+void oled_render_caps_lock(void) {
+    oled_write_ln_P(PSTR(""), false);
+    led_t led_state = host_keyboard_led_state();
+    oled_write_ln_P(led_state.caps_lock ? PSTR("CAPS") : PSTR("    "), led_state.caps_lock);
 }
 
 
@@ -161,7 +153,8 @@ void oled_render_logo(void) {
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
         oled_render_layer_state();
-        oled_render_keylog();
+        oled_render_caps_lock();
+        // oled_render_keylog();
     } else {
         oled_render_logo();
     }

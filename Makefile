@@ -482,6 +482,10 @@ endif
 # Extra targets for formatting and/or pytest, running within the qmk/qmk_cli container to match GHA.
 CONTAINER_PREAMBLE := export HOME="/tmp"; export PATH="/tmp/.local/bin:\$$PATH"; python3 -m pip install --upgrade pip; python3 -m pip install -r requirements-dev.txt
 
+.PHONY: compile-corne-6x3-vial
+compile-corne-6x3-vial:
+	$(QMK_BIN) compile -kb crkbd/rev1 -km vial -e CONVERT_TO=rp2040_ce
+
 .PHONY: format-core
 format-core:
 	RUNTIME=docker ./util/docker_cmd.sh bash -lic "$(CONTAINER_PREAMBLE); qmk format-c --core-only -a && qmk format-python -a"
