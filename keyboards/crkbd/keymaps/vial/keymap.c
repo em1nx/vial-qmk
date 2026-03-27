@@ -80,7 +80,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 
 static const char *layer_names[] = {
-    "Base", "Symbl", "Ctrl", "Func", "Four", "Five", "Game"
+    "Base", "One", "Two", "Three", "Four", "Five", "Six"
 };
 
 void oled_render_layer_state(void) {
