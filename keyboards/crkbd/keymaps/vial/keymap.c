@@ -152,6 +152,9 @@ void oled_render_logo(void) {
 
 bool oled_task_user(void) {
     if (is_keyboard_master()) {
+        oled_write_ln_P(PSTR(""), false);
+        oled_write_ln_P(PSTR("em1nx"), false);
+        oled_write_ln_P(PSTR(""), false);
         oled_render_layer_state();
         oled_render_caps_lock();
         // oled_render_keylog();
